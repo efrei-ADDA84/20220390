@@ -28,4 +28,3 @@ jobs:
         context : .
         push: true
         tags : abishaefrei/tp1devops:0.0.1
-
