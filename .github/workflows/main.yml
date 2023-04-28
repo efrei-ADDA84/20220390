@@ -30,4 +30,4 @@ jobs:
       with:
         context : ./TP2
         push: true
-        tags : abishaefrei/tp1devops:0.0.2, abishaefrei/tp1devops:${{github.run_number}}
+        tags : abishaefrei/tp1devops:0.0.2
