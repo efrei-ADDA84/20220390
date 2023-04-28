@@ -10,7 +10,7 @@
 
 
 - Dans le code Python pour le wrapper (wrapper.py), on a importé la librairie "requests" et la fonction "argv" de la librairie "sys". 
-La librairie "requests" permet de 
+"requests" est une bibliothèque HTTP, qui permet de 
 
 - 
 
