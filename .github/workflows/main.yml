@@ -27,5 +27,5 @@ jobs:
       with:
         context : 
         push: true
-        tags : tp1:0.0.1, abishaefrei/tp1devops:0.0.1
+        tags : abishaefrei/tp1devops:0.0.1
 
