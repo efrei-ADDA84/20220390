@@ -28,6 +28,6 @@ jobs:
     - name: Build and push to Docker Hub
       uses : docker/build-push-action@v2
       with:
-        context : .
+        context : ./TP2
         push: true
         tags : abishaefrei/tp1devops:0.0.1
