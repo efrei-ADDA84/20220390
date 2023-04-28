@@ -10,7 +10,7 @@
 
 
 - Dans le code Python pour le wrapper (wrapper.py), on a importé la librairie "requests" et la fonction "argv" de la librairie "sys". 
-"requests" est une bibliothèque HTTP, qui permet de 
+"requests" est une bibliothèque permettant d'utiliser le protocole HTTP de façon simple. "sys.argv" est une liste, qui contient tous les arguments passés en ligne de commandes au script Python. On peut ainsi récupérer les valeurs pour "lat", "long" et "api_rest".  
 
 - 
 
