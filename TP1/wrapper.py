@@ -11,14 +11,14 @@ import requests
 from sys import argv
 
 #On recupere les valeurs des variables d'environnements lat, long et API_KEY
-lat = argv[1]
-long = argv[2]
+lat = argv[1] #latitude
+long = argv[2] #longitude
 API_KEY = argv[3] #API key of openweather
 
-#url pour open map API
+#url pour openWeather Map API
 url = f"https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={long}&appid={API_KEY}"
 
-#Envoie la requete
+#Envoie une requete GET
 r = requests.get(url)
 
 #affiche en json la reponse de la requete 
