@@ -31,7 +31,7 @@ on:
   pull_request:
     branches: [ "main" ]
 ```
-- Le workflow s'exécute quand on fait un ```push``` ou on fait un ```pull_request``` sur la branche ```main``` du dépôt Github. 
+- Le workflow s'exécute quand on fait un ```push``` ou un ```pull_request``` sur la branche ```main``` du dépôt Github. 
 
 <br/>
 
@@ -71,7 +71,7 @@ jobs:
     uses: actions/checkout@v3
     ```
 
-    - 2ème étape : ```Login to Docker Hub```, qui permet de se connecter à Docker Hub à l'aide de l'action Docker Login et de notre **username** et notre **access token**. Le **username** et l'**access token** sont stockers github secrets. 
+    - 2ème étape : ```Login to Docker Hub``` permet de se connecter à Docker Hub à l'aide de l'action Docker Login et de notre **username** et notre **access token**. Le **username** et l'**access token** sont stockés dans github secrets. 
 
     ```bash
     name : Login to Docker Hub 
@@ -81,14 +81,14 @@ jobs:
         password : ${{secrets.ACCESS_TOKEN_DOCKER_HUB}}
     ```
 
-    - 3ème étape : ```Set up Docker Buildx```, est un constructeur par défaut pour construire notre image Docker.
+    - 3ème étape ```Set up Docker Buildx```,  ```Buildx``` est un constructeur par défaut pour construire notre image Docker.
 
     ```bash
     name: Set up Docker Buildx
     uses: docker/setup-buildx-action@v2
     ```
 
-    - 4ème étape : ```Build and push to Docker Hub```, qui génère l'image du conteneur et la dépose dans mon répertoire sur Docker Hub.
+    - 4ème étape : ```Build and push to Docker Hub``` génère l'image du conteneur et la dépose dans mon répertoire sur Docker Hub.
 
     ```bash
     name: Build and push to Docker Hub
@@ -159,10 +159,6 @@ if __name__ == '__main__':
 
 - ```app.run(debug=True, port=8081, host="0.0.0.0")``` permet d'exécuter l'application sur le port 8081
 
-<br/>
-
-**Problème rencontré** : Je n'avais pas créer et pousser l'image Docker avec Github Actions  
-**Solution** : ajouter ```host="0.0.0.0"``` dans les paramètres de ```app.run``` dans **wrapperApi.py**. 
 
 <br/>
 
@@ -223,7 +219,7 @@ CMD ["sh", "-c", "python3 ./wrapperApi.py ${API_KEY}"]
 ---
 ## 4. Test
 ---
-- Grâce à notre workflow crée sur Github Actions, lorqu'on push notre travail sur Git, on crée automatiquement une image Docker, qui est mis à disposition dans ma registry sur DockerHub. 
+- Grâce à notre workflow crée sur Github Actions, lorsqu'on push notre travail sur Git, on crée automatiquement une image Docker, qui est mis à disposition dans ma registry sur DockerHub. 
 
 - On pull cette image Docker, en exécutant la commande suivante : 
 ```bash
@@ -235,11 +231,6 @@ docker pull abishaefrei/tp1devops:0.0.2
 ```bash
 docker run -p 8081:8081 -it --env API_KEY=**** abishaefrei/tp1devops:0.0.2
 ```
-
-<br/>
-
-**Problème rencontré** : La commande suivante ```docker run --network host --env API_KEY=**** abishaefrei/tp1devops:0.0.2``` n'est pas reconnue sur Mac.   
-**Solution** : Remplacer ```--network host ``` par ```-p 8081:8081```. 
 
 <br/>
 

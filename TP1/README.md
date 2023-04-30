@@ -2,13 +2,13 @@
 
 # DEVOPS - TP1 - Docker
 
-<img src="https://www.docker.com/wp-content/uploads/2022/03/vertical-logo-monochromatic.png" width=800>
+<img src="https://www.docker.com/wp-content/uploads/2022/03/vertical-logo-monochromatic.png" width=300>
 
 ---
 ## 1. Objectif du TP1 : 
 ---
 
-Le but de ce TP est de créer un wrapper qui retourne la météo d'un lieu donné avec sa latitude et sa longitude
+Le but de ce TP est de créer un wrapper, qui retourne la météo d'un lieu donné avec sa latitude et sa longitude
 (passées en variable d'environnement) en utilisant openweather API. Puis, on va packager ce code dans une image Docker et le mettre à disposition sur DockerHub. 
 
 <br/>
@@ -152,7 +152,7 @@ On obtient bien le résultat attendu :
 ## 6. Partie Bonus
 ---
 
-- Hadolint permet de créer des images Docker conformes aux meilleures pratiques. À l'éxution de la commande suivante, on a eu 0 lint erreurs sur notre Dockerfile. 
+- Hadolint permet de créer des images Docker conformes aux meilleures pratiques. À l'exécution de la commande suivante, on a 0 lint erreurs sur notre Dockerfile. 
 ```bash
 docker run --rm -i hadolint/hadolint < Dockerfile
 ```
