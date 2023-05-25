@@ -16,8 +16,6 @@ déploie sur Azure Container Instance (ACI) en utilisant Github Actions.
 
 Pour ce TP, on a utilisé le code wrapperApi.py et  Dockerfile du TP2.
 
-<br/>
-
 ---
 ## 2. Configuration de Github Action
 ---
@@ -76,7 +74,7 @@ jobs:
             ports : 8081
             environment-variables: API_KEY=${{ secrets.API_KEY }}  
 ```
-- Dans ```jobs```, on regroupe toutes les jobs, qui doivent être exécutées dans notre workflow. ```build-and-deploy``` est le job id, puis on définit sur quel type de machine le job doit s'exécuter. Dans notre cas, on a mis ```ubuntu-latest```. 
+- Dans ```jobs```, on regroupe tous les jobs, qui doivent être exécutées dans notre workflow. ```build-and-deploy``` est le job id, puis on définit sur quel type de machine le job doit s'exécuter. Dans notre cas, on a mis ```ubuntu-latest```. 
 
 - Dans ```steps```, on définit les étapes de notre workflow : 
     - 1ère étape : ```Checkout GitHub Action```, qui permet de télécharger notre repository sous $GITHUB_WORKSPACE, afin que le workflow puisse y accéder.
@@ -84,6 +82,7 @@ jobs:
     name: 'Checkout GitHub Action'
     uses: actions/checkout@main
     ```
+
 
     - 2ème étape : ```Login via Azure CLI``` permet de se connecter à Azure à l'aide de l'action Docker Login et de notre **creds**. Le **creds** est stocké dans github secrets de l'organisation efrei-ADDA84. 
 
@@ -95,7 +94,7 @@ jobs:
     ```
 
     - 3ème étape ```Build and push image```,  
-    ```Build and push image``` génère l'image du conteneur et la dépose dans Azure Container Registry
+    ```Build and push image``` génère l'image du conteneur et la dépose dans Azure Container Registry.
 
     ```bash
     - name: 'Build and push image'
@@ -109,95 +108,104 @@ jobs:
         docker build ./TP3 -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/20220390:${{ github.sha }}
         docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/20220390:${{ github.sha }}
     ```
+    
 
-<br/>
+    - 4ème étape ```Deploy to Azure Container Instances```,  
+        ```Deploy to Azure Container Instances``` permet de déployer une instance d'Azure Container Instances (ACI). On définit le nom de cette étape comme **Déploiement vers Azure Container Instances**. L'action **aci-deploy** fournie par Azure permet de déployer des instances d'Azure Container Instances. Dans le **with**, on fournit des paramètres à cette action, tels que ```ressource-group```, ```dns-name-label```, ```image```, ```registry-login-server```, ```registry-username```, ```registry-password```, ```name```, ```location```, ```ports``` et ```environment-variables```
 
-  - 4ème étape ```Deploy to Azure Container Instances```,  
-      ```Deploy to Azure Container Instances``` permet de déployer une instance d'Azure Container Instances (ACI). On définit le nom de cette étape comme **Déploiement vers Azure Container Instances**. L'action **aci-deploy** fournie par Azure permet de déployer des instances d'Azure Container Instances. Dans le **with**, on fournit des paramètres à cette action, tels que **ressource-group, dns-name-label, image, registry-login-server, registry-username, registry-password, name, location, ports et environment-variables**
-
-   ```bash
-      name: 'Deploy to Azure Container Instances'
-      uses: 'azure/aci-deploy@v1'
-      with:
-        resource-group: ${{ secrets.RESOURCE_GROUP }}
-        dns-name-label: devops-20220390
-        image: ${{ secrets.REGISTRY_LOGIN_SERVER }}/20220390:${{ github.sha }}
-        registry-login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
-        registry-username: ${{ secrets.REGISTRY_USERNAME }}
-        registry-password: ${{ secrets.REGISTRY_PASSWORD }}
-        name: 20220390
-        location: 'france south'
-        ports : 8081
-        environment-variables: API_KEY=${{ secrets.API_KEY }}  
+    ```bash
+        name: 'Deploy to Azure Container Instances'
+        uses: 'azure/aci-deploy@v1'
+        with:
+          resource-group: ${{ secrets.RESOURCE_GROUP }}
+          dns-name-label: devops-20220390
+          image: ${{ secrets.REGISTRY_LOGIN_SERVER }}/20220390:${{ github.sha }}
+          registry-login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
+          registry-username: ${{ secrets.REGISTRY_USERNAME }}
+          registry-password: ${{ secrets.REGISTRY_PASSWORD }}
+          name: 20220390
+          location: 'france south'
+          ports : 8081
+          environment-variables: API_KEY=${{ secrets.API_KEY }}  
     ```
 
 <br/>
 
 
-        ```bash
-        resource-group: ${{ secrets.RESOURCE_GROUP }}
-        ```
+  ```bash
+  resource-group: ${{ secrets.RESOURCE_GROUP }}
+  ```
   - On indique le ressource groupe dans lequel on souhaite déployer notre instance d'ACI
+
 <br/>
 
-        ```bash
-        dns-name-label: devops-20220390
-        ```
+  ```bash
+  dns-name-label: devops-20220390
+  ```
   - On indique l'étiquette du DNS pour l'instance d'ACI
+
 <br/>
 
-        ```bash
-        registry-login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
-        ```
+  ```bash
+  registry-login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
+  ```
   - On indique le chemin de l'image Docker 
+
 <br/>
 
-        ```bash
-        image: ${{ secrets.REGISTRY_LOGIN_SERVER }}/20220390:${{ github.sha }}
-        ```
+  ```bash
+  image: ${{ secrets.REGISTRY_LOGIN_SERVER }}/20220390:${{ github.sha }}
+  ```
   - On indique le serveur de connexion du registre de conteneurs 
+
 <br/>
 
-        ```bash
-        registry-username: ${{ secrets.REGISTRY_USERNAME }}
-        ```
+  ```bash
+  registry-username: ${{ secrets.REGISTRY_USERNAME }}
+  ```
   - On indique le nom d'utilisateur pour accéder au registre de conteneurs 
+
 <br/>
 
-        ```bash
-        registry-password: ${{ secrets.REGISTRY_PASSWORD }}
-        ```
+  ```bash
+  registry-password: ${{ secrets.REGISTRY_PASSWORD }}
+  ```
   - On indique le mot de passe pour accéder au registre de conteneurs 
+
 <br/>
 
-        ```bash
-        name: 20220390
-        ```
+  ```bash
+  name: 20220390
+  ```
   - On définit le nom de l'instance d'ACI
+
 <br/>
 
-        ```bash
-        location: 'france south'
-        ```
+  ```bash
+  location: 'france south'
+  ```
   - On définit la région Azure dans laquelle on déploie l'instance d'ACI.
+
 <br/>
 
-        ```bash
-        ports : 8081
-        ```
+  ```bash
+  ports : 8081
+  ```
   - On indique le port sur lequel l'application dans l'instance d'ACI sera exposée.
+
 <br/>
 
-        ```bash
-        environment-variables: API_KEY=${{ secrets.API_KEY }}
-        ```
+  ```bash
+  environment-variables: API_KEY=${{ secrets.API_KEY }}
+  ```
   - On spécifie les variables d'anvironnements. Dans notre cas, on a la variable d'environnement **API_KEY**
+
 <br/>
 
 ---
 ## 2. Test
 ---
-- Grâce à notre workflow crée sur Github Actions, lorsqu'on push notre travail sur Git, on crée automatiquement une image Docker, qui est mis à disposition sur Azure Container Registry (ACR).
+Grâce à notre workflow crée sur Github Actions, lorsqu'on push notre travail sur Git, on crée automatiquement une image Docker, qui est mis à disposition sur Azure Container Registry (ACR).
 
 En effectuant un curl, on obtient bien le résultat attendu : 
 ```bash
@@ -256,7 +264,7 @@ Voici le résultat :
 <br/>
 
 ---
-## 6. Partie Bonus
+## 3. Partie Bonus
 ---
 - Aucune donnée sensible n'est stockée dans l'image Docker ou le code source. 
 
