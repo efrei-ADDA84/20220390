@@ -1,5 +1,5 @@
 on: [push]
-name: Deploy image Docker on ACR
+name: Deploy Image Docker on ACR
 
 jobs:
     build-and-deploy:
