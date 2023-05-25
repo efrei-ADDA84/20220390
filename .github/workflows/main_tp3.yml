@@ -1,18 +1,13 @@
-name: Docker Image CI
-
-on:
-  push:
-    branches: [ "main" ]
+on: [push]
+name: Deploy image Docker on ACR
 
 jobs:
     build-and-deploy:
-        name : Build and deploy
         runs-on: ubuntu-latest
-
         steps:
         # checkout the repo
         - name: 'Checkout GitHub Action'
-          uses: actions/checkout@v3
+          uses: actions/checkout@main
           
         - name: 'Login via Azure CLI'
           uses: azure/login@v1
