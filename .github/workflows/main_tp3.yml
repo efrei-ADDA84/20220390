@@ -1,5 +1,9 @@
 on: [push]
 name: Deploy Image Docker on ACR
+inputs: 
+  environment-variables: |
+    - name : API_KEY
+      value : ${{ secrets.API_KEY }}  
 
 jobs:
     build-and-deploy:
