@@ -20,6 +20,8 @@ jobs:
             login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
             username: ${{ secrets.REGISTRY_USERNAME }}
             password: ${{ secrets.REGISTRY_PASSWORD }}
+            context : ./TP3
+            push: true
         - run: |
             docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/20220390:${{ github.sha }}
             docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/20220390:${{ github.sha }}
@@ -35,3 +37,4 @@ jobs:
             registry-password: ${{ secrets.REGISTRY_PASSWORD }}
             name: 20220390
             location: 'france central'
+            
