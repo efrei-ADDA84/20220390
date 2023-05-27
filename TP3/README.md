@@ -21,14 +21,14 @@ Pour ce TP, on a utilisé le code wrapperApi.py et  Dockerfile du TP2.
 ---
 Dans ```.github/workflows```, on crée le fichier de workflow ```main3.yml```. 
 
-```bash
+```yml
 on: [push]
 ```
 - Le workflow s'exécute quand on fait un ```push``` sur Github. 
 
 <br/>
 
-```bash
+```yml
 name: Deploy Image Docker on ACR
 ```
 - On donne **Deploy Image Docker on ACR** comme nom à notre workflow
@@ -36,12 +36,11 @@ name: Deploy Image Docker on ACR
 <br/>
 
 
-```bash
+```yml
 jobs:
     build-and-deploy:
         runs-on: ubuntu-latest
         steps:
-        # checkout the repo
         - name: 'Checkout GitHub Action'
           uses: actions/checkout@main
           
@@ -78,7 +77,7 @@ jobs:
 
 - Dans ```steps```, on définit les étapes de notre workflow : 
     - 1ère étape : ```Checkout GitHub Action```, qui permet de télécharger notre repository sous $GITHUB_WORKSPACE, afin que le workflow puisse y accéder.
-    ```bash
+    ```yml
     name: 'Checkout GitHub Action'
     uses: actions/checkout@main
     ```
@@ -86,7 +85,7 @@ jobs:
 
     - 2ème étape : ```Login via Azure CLI``` permet de se connecter à Azure à l'aide de l'action Docker Login et de notre **creds**. Le **creds** est stocké dans github secrets de l'organisation efrei-ADDA84. 
 
-    ```bash
+    ```yml
     name: 'Login via Azure CLI'
     uses: azure/login@v1
     with:
@@ -96,7 +95,7 @@ jobs:
     - 3ème étape ```Build and push image```,  
     ```Build and push image``` génère l'image du conteneur et la dépose dans Azure Container Registry.
 
-    ```bash
+    ```yml
     - name: 'Build and push image'
       uses: azure/docker-login@v1
       with:
@@ -111,9 +110,9 @@ jobs:
     
 
     - 4ème étape ```Deploy to Azure Container Instances```,  
-        ```Deploy to Azure Container Instances``` permet de déployer une instance d'Azure Container Instances (ACI). On définit le nom de cette étape comme **Déploiement vers Azure Container Instances**. L'action **aci-deploy** fournie par Azure permet de déployer des instances d'Azure Container Instances. Dans le **with**, on fournit des paramètres à cette action, tels que ```ressource-group```, ```dns-name-label```, ```image```, ```registry-login-server```, ```registry-username```, ```registry-password```, ```name```, ```location```, ```ports``` et ```environment-variables```
+        ```Deploy to Azure Container Instances``` permet de déployer une instance d'Azure Container Instances (ACI). On définit le nom de cette étape comme **Déploiement vers Azure Container Instances**. L'action **aci-deploy** fournie par Azure permet de déployer des instances d'Azure Container Instances. Dans le ```with``` on fournit des paramètres à cette action, tels que ```ressource-group```, ```dns-name-label```, ```image```, ```registry-login-server```, ```registry-username```, ```registry-password```, ```name```, ```location```, ```ports``` et ```environment-variables```
 
-    ```bash
+    ```yml
         name: 'Deploy to Azure Container Instances'
         uses: 'azure/aci-deploy@v1'
         with:
@@ -132,80 +131,80 @@ jobs:
 <br/>
 
 
-  ```bash
+  ```yml
   resource-group: ${{ secrets.RESOURCE_GROUP }}
   ```
   - On indique le ressource groupe dans lequel on souhaite déployer notre instance d'ACI
 
 <br/>
 
-  ```bash
+  ```yml
   dns-name-label: devops-20220390
   ```
   - On indique l'étiquette du DNS pour l'instance d'ACI
 
 <br/>
 
-  ```bash
+  ```yml
   registry-login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
   ```
   - On indique le chemin de l'image Docker 
 
 <br/>
 
-  ```bash
+  ```yml
   image: ${{ secrets.REGISTRY_LOGIN_SERVER }}/20220390:${{ github.sha }}
   ```
   - On indique le serveur de connexion du registre de conteneurs 
 
 <br/>
 
-  ```bash
+  ```yml
   registry-username: ${{ secrets.REGISTRY_USERNAME }}
   ```
   - On indique le nom d'utilisateur pour accéder au registre de conteneurs 
 
 <br/>
 
-  ```bash
+  ```yml
   registry-password: ${{ secrets.REGISTRY_PASSWORD }}
   ```
   - On indique le mot de passe pour accéder au registre de conteneurs 
 
 <br/>
 
-  ```bash
+  ```yml
   name: 20220390
   ```
   - On définit le nom de l'instance d'ACI
 
 <br/>
 
-  ```bash
+  ```yml
   location: 'france south'
   ```
   - On définit la région Azure dans laquelle on déploie l'instance d'ACI.
 
 <br/>
 
-  ```bash
+  ```yml
   ports : 8081
   ```
   - On indique le port sur lequel l'application dans l'instance d'ACI sera exposée.
 
 <br/>
 
-  ```bash
+  ```yml
   environment-variables: API_KEY=${{ secrets.API_KEY }}
   ```
-  - On spécifie les variables d'anvironnements. Dans notre cas, on a la variable d'environnement **API_KEY**
+  - On spécifie les variables d'anvironnements. Dans notre cas, on a la variable d'environnement ```API_KEY```
 
 <br/>
 
 ---
 ## 2. Test
 ---
-Grâce à notre workflow crée sur Github Actions, lorsqu'on push notre travail sur Git, on crée automatiquement une image Docker, qui est mis à disposition sur Azure Container Registry (ACR).
+Grâce à notre workflow crée sur Github Actions, lorsqu'on push notre travail sur Git, on crée automatiquement une image Docker, qui est mise à disposition sur Azure Container Registry (ACR).
 
 En effectuant un curl, on obtient bien le résultat attendu : 
 ```bash
@@ -268,3 +267,15 @@ Voici le résultat :
 ---
 - Aucune donnée sensible n'est stockée dans l'image Docker ou le code source. 
 
+---
+## 4. Commentaires Github Action VS Interface utilisateur ou CLI
+---
+
+Github Action présente plusieurs avantages pour déployer par rapport l'interface utilisateur ou la CLI : 
+
+- **Automatisation** : Github Action permet d'automatiser le processus de déploiement de l'application. Comme par exemple, dans ce TP, on a configuré un workflow pour déployer l'image Docker sur Azure Container Instance (ACI), à chaque fois qu'on push du code sur Github. Or, avec l'interface utilisateur ou la CLI, on doit effectuer manuellement le déploiement. 
+
+- **Gestion des secrets** : Avec Github Action, on peut stocker de manière sécurisée des secrets tels que des clés d'API, qui sont nécessaires au déploiement. Pour cela, on doit simplement définir les secrets dans Github, pour que notre workflow puisse y accéder facilement. 
+
+- **Contrôle des versions et historique** : Avec Github Action, les workflow de déploiement sont versionnés. On peut donc facilement revenir sur une version précédente, si besoin. Avec la CLI, il est difficile de gérer l'historique.
+De plus, avec Github Action, on peut voir le déroulement étape par étape du déploiement. Ainsi, en cas de déploiement échoué, on peut facilement repérer les erreurs et les debogguer par la suite. 
