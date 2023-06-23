@@ -5,7 +5,7 @@ resource "tls_private_key" "ssh_key" {
 }
 
 output "private_key" {
-  value = tls_private_key.ssh_key.private_key_pem
+  value     = tls_private_key.ssh_key.private_key_pem
   sensitive = true
 }
 
@@ -16,7 +16,7 @@ resource "azurerm_linux_virtual_machine" "terraform_vm" {
   resource_group_name   = var.resource_group_name
   network_interface_ids = [azurerm_network_interface.terraform-network_interface.id]
   size                  = "Standard_D2s_v3"
-  
+
   source_image_reference {
     publisher = "Canonical"
     offer     = "UbuntuServer"
